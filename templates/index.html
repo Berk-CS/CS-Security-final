@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Security Scanner</title>
+</head>
+<body>
+    <h1>Security Scanner</h1>
+    <form action="/" method="post" id="main-form">
+        <label for="url">Website URL:</label>
+        <input type="text" id="url" name="url" required><br><br>
+        <label for="username">Username (optional):</label>
+        <input type="text" id="username" name="username"><br><br>
+        <label for="password">Password (optional):</label>
+        <input type="password" id="password" name="password"><br><br>
+    </form>
+    {% if login_status %}
+    <p>{{ login_status }}</p>
+    {% endif %}
+    {% if scanner_result %}
+    <p>{{ scanner_result }}</p>
+    {% endif %}
+    <button onclick="performGetRequest()">Perform GET Request</button>
+    <button onclick="runSecurityScanner()">Run Security Scanner</button>
+
+    <script>
+        function performGetRequest() {
+            var url = document.getElementById('url').value;
+            window.location.href = '/get-request?url=' + encodeURIComponent(url);
+        }
+
+        function runSecurityScanner() {
+            var url = document.getElementById('url').value;
+            var username = document.getElementById('username').value;
+            var password = document.getElementById('password').value;
+            var form = document.createElement('form');
+            form.action = '/scan';
+            form.method = 'post';
+            var urlField = document.createElement('input');
+            urlField.type = 'hidden';
+            urlField.name = 'url';
+            urlField.value = url;
+            form.appendChild(urlField);
+            if (username) {
+                var usernameField = document.createElement('input');
+                usernameField.type = 'hidden';
+                usernameField.name = 'username';
+                usernameField.value = username;
+                form.appendChild(usernameField);
+            }
+            if (password) {
+                var passwordField = document.createElement('input');
+                passwordField.type = 'hidden';
+                passwordField.name = 'password';
+                passwordField.value = password;
+                form.appendChild(passwordField);
+            }
+            document.body.appendChild(form);
+            form.submit();
+        }
+    </script>
+</body>
+</html>
+
